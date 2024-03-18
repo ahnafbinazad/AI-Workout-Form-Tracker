@@ -1,6 +1,7 @@
 # The class_names list contains the names of different workout forms that the AI model will identify.
 
 class_names = [
+    'resting',
     'barbell biceps curl', 
     'bench press', 
     'chest fly machine', 
