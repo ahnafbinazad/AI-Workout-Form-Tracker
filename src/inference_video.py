@@ -46,17 +46,6 @@ def infer_video(args):
     transform = get_test_transform(IMAGE_RESIZE)
 
     cap = cv2.VideoCapture(args.input)
-    # Get the frame width and height.
-    frame_width = int(cap.get(3))
-    frame_height = int(cap.get(4))
-
-    # file saving section
-    # # Define the outfile file name.
-    # save_name = f"{args.input.split('/')[-1].split('.')[0]}"
-    # # Define codec and create VideoWriter object.
-    # out = cv2.VideoWriter(f"{OUT_DIR}/{save_name}.mp4",
-    #                       cv2.VideoWriter_fourcc(*'mp4v'), 30,
-    #                       (frame_width, frame_height))
 
     # To count the total number of frames iterated through.
     frame_count = 0
