@@ -1,4 +1,5 @@
 class_names = [
+    'resting',
     'barbell biceps curl', 
     'bench press', 
     'chest fly machine', 

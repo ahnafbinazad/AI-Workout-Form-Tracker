@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc401653-c770-474d-afba-75aedb5d42cd" name="Changes" comment="refinements">
+    <list default="true" id="dc401653-c770-474d-afba-75aedb5d42cd" name="Changes" comment="added git ignore">
       <change beforePath="$PROJECT_DIR$/src/class_names.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/class_names.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,20 +33,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/ahnafazad/Documents/GitHub/Deep-Learning-Exercise-Recognizer&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/ahnafazad/Documents/GitHub/Deep-Learning-Exercise-Recognizer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/model" />
@@ -108,6 +109,7 @@
       <workItem from="1711143319741" duration="594000" />
       <workItem from="1711295962371" duration="763000" />
       <workItem from="1711324948105" duration="3000" />
+      <workItem from="1711736793476" duration="1696000" />
     </task>
     <task id="LOCAL-00001" summary="added API endpoints">
       <option name="closed" value="true" />
@@ -125,7 +127,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710844682349</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added git ignore">
+      <option name="closed" value="true" />
+      <created>1711736861424</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1711736861424</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,6 +144,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added API endpoints" />
     <MESSAGE value="refinements" />
-    <option name="LAST_COMMIT_MESSAGE" value="refinements" />
+    <MESSAGE value="added git ignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added git ignore" />
   </component>
 </project>
