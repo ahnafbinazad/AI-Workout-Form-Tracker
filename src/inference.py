@@ -26,36 +26,33 @@ parser.add_argument(
 args = parser.parse_args()
 
 # Constants and other configurations.
-DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')  # Use GPU if available
-IMAGE_RESIZE = 256  # Image size after resizing
+DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+IMAGE_RESIZE = 256
 
 # Validation transforms
 def get_test_transform(image_size):
-    """Returns a composition of image transformations for testing."""
     test_transform = transforms.Compose([
         transforms.ToPILImage(),
-        transforms.Resize((image_size, image_size)),  # Resize the image
-        transforms.CenterCrop(224),  # Crop the center of the image
-        transforms.ToTensor(),  # Convert the image to a PyTorch tensor
+        transforms.Resize((image_size, image_size)),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],
             std=[0.229, 0.224, 0.225]
-        )  # Normalize the image using predefined mean and standard deviation
+        )
     ])
     return test_transform
 
 def denormalize(
-    x,
-    mean=[0.485, 0.456, 0.406],
+    x, 
+    mean=[0.485, 0.456, 0.406], 
     std=[0.229, 0.224, 0.225]
 ):
-    """Denormalizes a tensor."""
     for t, m, s in zip(x, mean, std):
         t.mul_(s).add_(m)
     return torch.clamp(x, 0, 1)
 
 def annotate_image(image, output_class):
-    """Annotates the image with the predicted class."""
     image = denormalize(image).cpu()
     image = image.squeeze(0).permute((1, 2, 0)).numpy()
     image = np.ascontiguousarray(image, dtype=np.float32)
@@ -68,7 +65,7 @@ def annotate_image(image, output_class):
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
         (0, 0, 255),
-        2,
+        2, 
         lineType=cv2.LINE_AA
     )
     return image
@@ -108,7 +105,7 @@ if __name__ == '__main__':
     checkpoint = torch.load(weights_path, map_location=DEVICE)
     # Load the model.
     model = build_model(
-        fine_tune=False,
+        fine_tune=False, 
         num_classes=len(CLASS_NAMES)
     ).to(DEVICE)
     model.load_state_dict(checkpoint['model_state_dict'])
@@ -124,7 +121,7 @@ if __name__ == '__main__':
         image = transform(image)
         image = torch.unsqueeze(image, 0)
         result = inference(
-            model,
+            model, 
             image,
             DEVICE
         )

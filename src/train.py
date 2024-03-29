@@ -12,7 +12,6 @@ from datasets import get_data_loaders, get_datasets
 from utils import save_model, save_plots, SaveBestModel
 from class_names import class_names
 
-# Setting random seed for reproducibility
 seed = 42
 np.random.seed(seed)
 random.seed(seed)
@@ -23,17 +22,16 @@ torch.backends.cudnn.deterministic = True
 
 # Construct the argument parser.
 parser = argparse.ArgumentParser()
-# Command line arguments for training settings
 parser.add_argument(
-    '-e', '--epochs',
-    type=int,
+    '-e', '--epochs', 
+    type=int, 
     default=10,
     help='Number of epochs to train our network for'
 )
 parser.add_argument(
-    '-lr', '--learning-rate',
+    '-lr', '--learning-rate', 
     type=float,
-    dest='learning_rate',
+    dest='learning_rate', 
     default=0.001,
     help='Learning rate for training the model'
 )
@@ -45,7 +43,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '-ft', '--fine-tune',
-    dest='fine_tune',
+    dest='fine_tune' ,
     action='store_true',
     help='pass this to fine tune all layers'
 )
@@ -62,7 +60,6 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-
 # Training function.
 def train(model, trainloader, optimizer, criterion):
     model.train()
@@ -71,8 +68,8 @@ def train(model, trainloader, optimizer, criterion):
     train_running_correct = 0
     counter = 0
     prog_bar = tqdm(
-        trainloader,
-        total=len(trainloader),
+        trainloader, 
+        total=len(trainloader), 
         bar_format='{l_bar}{bar:20}{r_bar}{bar:-20b}'
     )
     for i, data in enumerate(prog_bar):
@@ -93,12 +90,11 @@ def train(model, trainloader, optimizer, criterion):
         loss.backward()
         # Update the weights.
         optimizer.step()
-
+    
     # Loss and accuracy for the complete epoch.
     epoch_loss = train_running_loss / counter
     epoch_acc = 100. * (train_running_correct / len(trainloader.dataset))
     return epoch_loss, epoch_acc
-
 
 # Validation function.
 def validate(model, testloader, criterion):
@@ -108,14 +104,14 @@ def validate(model, testloader, criterion):
     valid_running_correct = 0
     counter = 0
     prog_bar = tqdm(
-        testloader,
-        total=len(testloader),
+        testloader, 
+        total=len(testloader), 
         bar_format='{l_bar}{bar:20}{r_bar}{bar:-20b}'
     )
     with torch.no_grad():
         for i, data in enumerate(prog_bar):
             counter += 1
-
+            
             image, labels = data
             image = image.to(device)
             labels = labels.to(device)
@@ -127,12 +123,11 @@ def validate(model, testloader, criterion):
             # Calculate the accuracy.
             _, preds = torch.max(outputs.data, 1)
             valid_running_correct += (preds == labels).sum().item()
-
+        
     # Loss and accuracy for the complete epoch.
     epoch_loss = valid_running_loss / counter
     epoch_acc = 100. * (valid_running_correct / len(testloader.dataset))
     return epoch_loss, epoch_acc
-
 
 if __name__ == '__main__':
     # Create a directory with the model name for outputs.
@@ -148,7 +143,7 @@ if __name__ == '__main__':
         dataset_train, dataset_valid, batch_size=args.batch_size
     )
 
-    # Learning_parameters.
+    # Learning_parameters. 
     lr = args.learning_rate
     epochs = args.epochs
     device = ('cuda' if torch.cuda.is_available() else 'cpu')
@@ -158,11 +153,11 @@ if __name__ == '__main__':
 
     # Load the model.
     model = build_model(
-        fine_tune=args.fine_tune,
+        fine_tune=args.fine_tune, 
         num_classes=len(class_names)
     ).to(device)
     print(model)
-
+    
     # Total parameters and trainable parameters.
     total_params = sum(p.numel() for p in model.parameters())
     print(f"{total_params:,} total parameters.")
@@ -188,7 +183,7 @@ if __name__ == '__main__':
     train_acc, valid_acc = [], []
     # Start the training.
     for epoch in range(epochs):
-        print(f"[INFO]: Epoch {epoch + 1} of {epochs}")
+        print(f"[INFO]: Epoch {epoch+1} of {epochs}")
         train_epoch_loss, train_epoch_acc = train(
             model, train_loader, optimizer, criterion
         )
@@ -206,7 +201,7 @@ if __name__ == '__main__':
         )
         if args.scheduler:
             scheduler.step()
-        print('-' * 50)
+        print('-'*50)
 
     # Save the trained model weights.
     save_model(epochs, model, optimizer, criterion, out_dir, args.save_name)
