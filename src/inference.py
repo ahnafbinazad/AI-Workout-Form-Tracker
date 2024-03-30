@@ -2,36 +2,22 @@ import torch
 import numpy as np
 import cv2
 import os
-import torch.nn.functional as F
 import torchvision.transforms as transforms
 import glob
-import argparse
 import pathlib
+
+from torch.testing._internal.common_utils import args
 
 from model import build_model
 from class_names import class_names as CLASS_NAMES
 
-# Construct the argument parser.
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    '-w', '--weights', 
-    default='../outputs/best_model.pth',
-    help='path to the model weights',
-)
-parser.add_argument(
-    '--input',
-    required=True,
-    help='path to the directory containing images'
-)
-args = parser.parse_args()
-
-# Constants and other configurations.
+# Constants
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 IMAGE_RESIZE = 256
 
-# Validation transforms
+# Transforms
 def get_test_transform(image_size):
-    test_transform = transforms.Compose([
+    return transforms.Compose([
         transforms.ToPILImage(),
         transforms.Resize((image_size, image_size)),
         transforms.CenterCrop(224),
@@ -41,13 +27,8 @@ def get_test_transform(image_size):
             std=[0.229, 0.224, 0.225]
         )
     ])
-    return test_transform
 
-def denormalize(
-    x, 
-    mean=[0.485, 0.456, 0.406], 
-    std=[0.229, 0.224, 0.225]
-):
+def denormalize(x, mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]):
     for t, m, s in zip(x, mean, std):
         t.mul_(s).add_(m)
     return torch.clamp(x, 0, 1)
@@ -65,34 +46,18 @@ def annotate_image(image, output_class):
         cv2.FONT_HERSHEY_SIMPLEX,
         0.7,
         (0, 0, 255),
-        2, 
+        2,
         lineType=cv2.LINE_AA
     )
     return image
 
-def inference(model, testloader, DEVICE):
-    """
-    Function to run inference.
-
-    :param model: The trained model.
-    :param testloader: The test data loader.
-    :param DEVICE: The computation device.
-    """
+def inference(model, image, DEVICE):
     model.eval()
-    counter = 0
     with torch.no_grad():
-        counter += 1
-        image = testloader
         image = image.to(DEVICE)
-
-        # Forward pass.
         outputs = model(image)
-    # Softmax probabilities.
-    predictions = F.softmax(outputs, dim=1).cpu().numpy()
-    # Predicted class number.
-    output_class = np.argmax(predictions)
-    # Show and save the results.
-    result = annotate_image(image, output_class)
+    predictions = torch.argmax(torch.softmax(outputs, dim=1), dim=1)
+    result = annotate_image(image, predictions)
     return result
 
 if __name__ == '__main__':
@@ -103,15 +68,10 @@ if __name__ == '__main__':
     os.makedirs(infer_result_path, exist_ok=True)
 
     checkpoint = torch.load(weights_path, map_location=DEVICE)
-    # Load the model.
-    model = build_model(
-        fine_tune=False, 
-        num_classes=len(CLASS_NAMES)
-    ).to(DEVICE)
+    model = build_model(fine_tune=False, num_classes=len(CLASS_NAMES)).to(DEVICE)
     model.load_state_dict(checkpoint['model_state_dict'])
 
     all_image_paths = glob.glob(os.path.join(args.input, '*.jpg'))
-
     transform = get_test_transform(IMAGE_RESIZE)
 
     for i, image_path in enumerate(all_image_paths):
@@ -120,15 +80,8 @@ if __name__ == '__main__':
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         image = transform(image)
         image = torch.unsqueeze(image, 0)
-        result = inference(
-            model, 
-            image,
-            DEVICE
-        )
-        # Save the image to disk.
+        result = inference(model, image, DEVICE)
         image_name = image_path.split(os.path.sep)[-1]
         cv2.imshow('Image', result)
         cv2.waitKey(1)
-        cv2.imwrite(
-            os.path.join(infer_result_path, image_name), result*255.
-        )
+        cv2.imwrite(os.path.join(infer_result_path, image_name), result*255.)

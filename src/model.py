@@ -1,14 +1,13 @@
 from torchvision import models
-
 import torch.nn as nn
 
 def build_model(fine_tune=True, num_classes=10):
-    model = models.resnet50(weights='DEFAULT')
+    model = models.resnet50(pretrained=True)
     if fine_tune:
         print('[INFO]: Fine-tuning all layers...')
         for params in model.parameters():
             params.requires_grad = True
-    if not fine_tune:
+    else:
         print('[INFO]: Freezing hidden layers...')
         for params in model.parameters():
             params.requires_grad = False
